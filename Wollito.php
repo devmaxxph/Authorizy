@@ -59,9 +59,11 @@ class Wollito
         $response = curl_exec($ch);
 
         if (curl_error($ch)) {
-            echo "Error" . $response;
+            $this->return_error("Could not make API call. Unknown error occurred.");
+
         }
         curl_close($ch);
+        return $response;
     }
 
     private function check_keys(){
