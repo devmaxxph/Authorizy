@@ -98,4 +98,4 @@ Webhooks can be authenticated with the following call, just pass the
 
 `             $wollito->validate_webhook_call($_POST);         `
 
-Examples can be found [Here](https://github.com/Wollito/wollito/Example)
+Examples can be found [Here](https://github.com/Wollito/wollito/tree/main/Example)
