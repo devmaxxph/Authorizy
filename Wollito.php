@@ -66,6 +66,16 @@ class Wollito
         return $response;
     }
 
+    public function validate_webhook_call($secret){
+        if(isset($secret['secret'])){
+            if($this->api_secret == $secret['secret']){
+                return true;
+            }
+        }
+        $this->return_error("Could not be authenticated");
+
+    }
+
     private function check_keys(){
         if($this->api_key && $this->api_secret){
             return true;
