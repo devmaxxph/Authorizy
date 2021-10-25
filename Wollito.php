@@ -10,7 +10,7 @@ class Wollito
     private $api_key = "";
     private $api_secret = "";
     private $currency = "GBP";
-    private $url = "https://e554-82-23-186-246.ngrok.io/wolito_wp_api/charge.php";
+    private $url = "https://securepayment.wollito.com/charge.php";
 
     public function __construct($api_key = "", $api_secret = "", $currency = "GBP")
     {
@@ -44,7 +44,7 @@ class Wollito
             'order_id' => $order_id,
             'key' => $this->api_key,
             'secret' => $this->api_key,
-            'site_url' => $_SERVER['REQUEST_URI'],
+            'site_url' => $this->url(),
             'type' => 'php'
         ];
 
@@ -95,5 +95,15 @@ class Wollito
 
     private function return_error($message){
         throw new Exception($message);
+    }
+
+    private function url(){
+        if(isset($_SERVER['HTTPS'])){
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        }
+        else{
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 }
