@@ -10,7 +10,7 @@ class Wollito
     private $api_key = "";
     private $api_secret = "";
     private $currency = "GBP";
-    private $url = "https://ae20-82-23-186-246.ngrok.io/wolito_wp_api/charge";
+    private $url = "https://e554-82-23-186-246.ngrok.io/wolito_wp_api/charge.php";
 
     public function __construct($api_key = "", $api_secret = "", $currency = "GBP")
     {
