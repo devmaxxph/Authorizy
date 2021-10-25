@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wollito Payment Gateway</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div style="width:90%; margin:auto;">
+
+
+    <h2>Wollito Payment Gateway</h2>
+    <p>
+        To install the payment gateway we can use composer.<br/>
+        <code>composer require wollito/wollito:dev-main</code>
+    </p>
+
+    <div class="install">
+        After package installation, you need to include the autoload file in your project.
+        <br>
+        <code>require_once "vendor/autoload.php";</code>
+        <br/>
+
+
+        <p>Ensure your composer.json includes the following;</p>
+
+        <code>
+            <pre style="color: #e83e8c;">
+    "autoload": {
+        "psr-4": {
+            "WollitoPackage\\": "vendor/wollito/wollito"
+        }
+    }
+                </pre>
+        </code>
+
+        <h4>Introduction: </h4>
+
+        <p>To get start you must instantiate the class, you pass the API Key, API Secret & Currency</p>
+        <small>Currency options include; GBP, USD, EUR</small>
+
+        <br/>
+
+        <code>
+            $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "CURRENCY (GBP)");
+        </code>
+
+        <br/><br/>
+
+        <p>Once you have instantiated the class, you can call function using the <code>$wollito</code> variable.</p>
+
+        <h4>Processing Payments:</h4>
+        <p>The process payment functions, takes the parameters below and can be called like so: </p>
+
+        <code> $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID"); </code>
+
+        <br/><br/>
+
+        <h4>Response: </h4>
+        <p>The call will return a JSON object containing the status and date or error message</p>
+
+        <code>
+            <pre style="color: #e83e8c;">
+if($data){
+    $data = json_decode($data);
+
+    //STORE ORDER IN DB FOR WEBHOOK CALLS ETC
+
+    if(isset($data->status)){
+        switch ($data->status){
+            case 'success':
+                //Payment success. Charge id $data->data
+                break;
+
+            case 'failed':
+                //Payment failed, further info $data->message
+                break;
+
+            case 'pending':
+                //Payment Pending. Notification update in webhook.php
+                break;
+
+            default:
+                //Unknown status
+                break;
+        }
+    }
+}
+
+            </pre>
+
+        </code>
+
+        <h4>Webhook: </h4>
+        <p>Sometimes payments are returned as pending and therefore will need updating via a webhook.</p>
+        <p>Webhook calls are posted to webhook.php, to the originating site URL which made the charge request.</p>
+        <p>Webhooks can be authenticated with the following call, just pass the <code>$_POST</code> data variable</p>
+
+        <code>
+            $wollito->validate_webhook_call($_POST);
+        </code>
+    </div>
+
+    <div>
+        <p>Examples can be found <a href="https://github.com/Wollito/wollito/Example">Here</a> </p>
+    </div>
+
+</div>
+</body>
+</html>
