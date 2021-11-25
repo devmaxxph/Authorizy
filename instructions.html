@@ -57,8 +57,9 @@
 
         <h4>Processing Payments:</h4>
         <p>The process payment functions, takes the parameters below and can be called like so: </p>
+        <small>Generate random string as part of the from, so there are no duplicate payments.</small>
 
-        <code> $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID"); </code>
+        <code> $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID", "RANDOM STRING"); </code>
 
         <br/><br/>
 

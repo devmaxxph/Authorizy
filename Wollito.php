@@ -10,7 +10,7 @@ class Wollito
     private $api_key = "";
     private $api_secret = "";
     private $currency = "GBP";
-    private $url = "https://securepayment.wollito.com/charge.php";
+    private $url = "https://securepayment.wollito.com/temp/charge.php";
 
     public function __construct($api_key = "", $api_secret = "", $currency = "GBP")
     {
@@ -31,7 +31,7 @@ class Wollito
         }
     }
 
-    public function process_payment($amount, $card_number, $exp_month, $exp_year, $cvc, $order_id){
+    public function process_payment($amount, $card_number, $exp_month, $exp_year, $cvc, $order_id, $id_key){
         $this->check_keys();
         //add amount validation & luhn check
         $postfields = [
@@ -45,6 +45,7 @@ class Wollito
             'key' => $this->api_key,
             'secret' => $this->api_key,
             'site_url' => $this->url(),
+            'id_key' => $id_key,
             'type' => 'php'
         ];
 
