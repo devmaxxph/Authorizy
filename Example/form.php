@@ -5,7 +5,7 @@ $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", 
 
 if($_POST){
 
-    $data = $wollito->process_payment("1.00", $_POST['card'], $_POST['exp_month'], $_POST['exp_year'], $_POST['cvc'], "123");
+    $data = $wollito->process_payment("1.00", $_POST['card'], $_POST['exp_month'], $_POST['exp_year'], $_POST['cvc'], "123", $_POST['id_key']);
 
     if($data){
         $data = json_decode($data);
@@ -441,6 +441,7 @@ if($_POST){
 
                 <input type="hidden" id="currency" name="currency" value="USD">
                 <input type="hidden" id="order_id" name="order_id" value="1234">
+                <input type="hidden" id="id_key" name="id_key" value="<?php echo base64_encode(openssl_random_pseudo_bytes(10)) ?>">
 
                 <input type="submit" class="btn btn-primary" id="submit-btn" name="submit" value="submit" onclick="validateCardNumber()">
 
