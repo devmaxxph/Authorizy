@@ -1,12 +1,12 @@
 {
-    "name": "zumlex/wollito",
+    "name": "wollito/wollito",
     "description": "Wollito Payment Gateway",
     "type": "library",
     "license": "proprietary",
     "authors": [
         {
-            "name": "Qasim Ahmed",
-            "email": "qahmed@zumlex.com"
+            "name": "Wollito",
+            "email": "Thomas.rowlands@wollito.com"
         }
     ],
     "minimum-stability": "stable",
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WollitoPackage\\": "vendor/zumlex/wollito"
+            "WollitoPackage\\": "vendor/wollito/wollito"
         }
     }
 }
