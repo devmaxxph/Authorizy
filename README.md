@@ -43,8 +43,9 @@ Once you have instantiated the class, you can call function using the
 
 The process payment functions, takes the parameters below and can be
 called like so:
+Generate random string as part of the from, so there are no duplicate payments.
 
-` $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID"); `
+` $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID",  "RANDOM STRING"); `
 \
 \
 
