@@ -39,6 +39,10 @@ Currency options include; GBP, USD, EUR \
 Once you have instantiated the class, you can call function using the
 `$wollito` variable.
 
+#### Set Address Details
+
+`$wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);`
+
 #### Processing Payments:
 
 The process payment functions, takes the parameters below and can be
