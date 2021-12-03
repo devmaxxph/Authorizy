@@ -11,6 +11,7 @@ class Wollito
     private $api_secret = "";
     private $currency = "GBP";
     private $url = "https://securepayment.wollito.com/temp/charge.php";
+    private $address_info = [];
 
     public function __construct($api_key = "", $api_secret = "", $currency = "GBP")
     {
@@ -31,6 +32,18 @@ class Wollito
         }
     }
 
+    public function set_address_info($line1, $line2, $city, $state, $post_code, $country)
+    {
+        $this->address_info = [
+            "line1"=>  $line1,
+            "line2"=>$line2,
+            "city"=>$city,
+            "state"=>$state,
+            "postal_code"=>$post_code,
+            "country"=>$country
+        ];
+    }
+
     public function process_payment($amount, $card_number, $exp_month, $exp_year, $cvc, $order_id, $id_key){
         $this->check_keys();
         //add amount validation & luhn check
@@ -48,6 +61,15 @@ class Wollito
             'id_key' => $id_key,
             'type' => 'php'
         ];
+
+        if($this->address_info){
+            $postfields["line1"] = $this->address_info['line1'];
+            $postfields["line2"] = $this->address_info['line2'];
+            $postfields["city"] = $this->address_info['city'];
+            $postfields["state"] = $this->address_info['state'];
+            $postfields["postal_code"] = $this->address_info['postal_code'];
+            $postfields["country"] = $this->address_info['country'];
+        }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url);
