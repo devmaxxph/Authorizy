@@ -55,6 +55,9 @@
 
         <p>Once you have instantiated the class, you can call function using the <code>$wollito</code> variable.</p>
 
+        <h4>Set Address Details</h4>
+        <code>$wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);</code>
+
         <h4>Processing Payments:</h4>
         <p>The process payment functions, takes the parameters below and can be called like so: </p>
         <small>Generate random string as part of the from, so there are no duplicate payments.</small>
