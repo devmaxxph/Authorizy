@@ -4,7 +4,7 @@ require_once "vendor/autoload.php";
 $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "GBP");
 
 if($_POST){
-
+    $wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);
     $data = $wollito->process_payment("1.00", $_POST['card'], $_POST['exp_month'], $_POST['exp_year'], $_POST['cvc'], "123", $_POST['id_key']);
 
     if($data){
@@ -86,7 +86,7 @@ if($_POST){
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Country/Region*</label>
-                            <select class="form-control" id="cregion" name="cregion">
+                            <select class="form-control" id="country" name="country">
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Åland Islands">Åland Islands</option>
                                 <option value="Albania">Albania</option>
@@ -340,9 +340,9 @@ if($_POST){
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label>Street adress *</label>
-                            <input required type="text" placeholder="House number and street name" class="form-control" id="saddres" name="saddres" value=""><br>
-                            <input required type="text" placeholder="Apartment, suit, unit, etc. (optional)" class="form-control" id="soptional" name="soptional" value=""><br>
+                            <label>Street address *</label>
+                            <input required type="text" placeholder="House number and street name" class="form-control" id="line1" name="line1" value=""><br>
+                            <input required type="text" placeholder="Apartment, suit, unit, etc. (optional)" class="form-control" id="line2" name="line2" value=""><br>
                         </div>
                     </div>
                 </div>
@@ -350,7 +350,7 @@ if($_POST){
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Town / City *</label>
-                            <input required type="text" class="form-control" id="town" name="town" value=""><br>
+                            <input required type="text" class="form-control" id="city" name="city" value=""><br>
                         </div>
                     </div>
                 </div>
@@ -359,6 +359,14 @@ if($_POST){
                         <div class="form-group">
                             <label>State / Country (optional)</label>
                             <input type="text" class="form-control" id="country" name="country" value=""><br>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Zip Code</label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" value=""><br>
                         </div>
                     </div>
                 </div>
