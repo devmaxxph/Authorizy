@@ -32,63 +32,26 @@ Secret & Currency
 
 Currency options include; GBP, USD, EUR \
 
-`             $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "CURRENCY (GBP)");         `
+`             $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "your SITE URL", "CURRENCY (GBP)");         `
 \
 \
 
 Once you have instantiated the class, you can call function using the
 `$wollito` variable.
 
-#### Set Address Details
-
-`$wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);`
-
 #### Processing Payments:
 
 The process payment functions, takes the parameters below and can be
 called like so:
-Generate random string as part of the from, so there are no duplicate payments.
+Always include the payment=true parameter.
 
-` $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID",  "RANDOM STRING"); `
+` $data = $wollito->create_charge_link("AMOUNT", "ORDER ID", "Return URL (yoururl.com/returnpage.php?payment=true"); `
 \
 \
 
 #### Response:
 
-The call will return a JSON object containing the status and date or
-error message
-
-`             `
-
-``` {style="color: #e83e8c;"}
-if($data){
-    $data = json_decode($data);
-
-    //STORE ORDER IN DB FOR WEBHOOK CALLS ETC
-
-    if(isset($data->status)){
-        switch ($data->status){
-            case 'success':
-                //Payment success. Charge id $data->data
-                break;
-
-            case 'failed':
-                //Payment failed, further info $data->message
-                break;
-
-            case 'pending':
-                //Payment Pending. Notification update in webhook.php
-                break;
-
-            default:
-                //Unknown status
-                break;
-        }
-    }
-}
-
-            
-```
+The call will return a url or false value
 
 #### Webhook:
 
