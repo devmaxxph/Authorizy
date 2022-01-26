@@ -1,8 +1,5 @@
 <?php
 
-namespace WollitoPackage;
-use Exception;
-
 
 class Wollito
 {
@@ -10,13 +7,17 @@ class Wollito
     private $api_key = "";
     private $api_secret = "";
     private $currency = "GBP";
-    private $url = "https://securepayment.wollito.com/temp/charge.php";
-    private $address_info = [];
+    private $descriptor = "";
+    private $site_url = "";
+    private $url = "https://paymentgateway.wollito.com/";
 
-    public function __construct($api_key = "", $api_secret = "", $currency = "GBP")
+
+    public function __construct($api_key = "", $api_secret = "", $descriptor = "", $site_url = "", $currency = "GBP")
     {
         $this->set_keys($api_key, $api_secret);
         $this->set_currency($currency);
+        $this->set_descriptor($descriptor);
+        $this->set_site_url($site_url);
     }
 
 
@@ -32,71 +33,44 @@ class Wollito
         }
     }
 
-    public function set_address_info($line1, $line2, $city, $state, $post_code, $country)
+    public function set_descriptor($descriptor)
     {
-        $this->address_info = [
-            "line1"=>  $line1,
-            "line2"=>$line2,
-            "city"=>$city,
-            "state"=>$state,
-            "postal_code"=>$post_code,
-            "country"=>$country
-        ];
+        $this->descriptor = $descriptor;
     }
 
-    public function process_payment($amount, $card_number, $exp_month, $exp_year, $cvc, $order_id, $id_key){
+    public function set_site_url($url)
+    {
+        $this->site_url = $url;
+    }
+
+    public function create_charge_link($amount, $order_id, $return_url)
+    {
         $this->check_keys();
-        //add amount validation & luhn check
-        $postfields = [
-            'card'     => $card_number,
-            'exp_month' => $exp_month,
-            'exp_year'    => $exp_year,
-            'cvc'  => $cvc,
-            'amount' => $amount,
-            'currency' => $this->currency,
-            'order_id' => $order_id,
-            'key' => $this->api_key,
-            'secret' => $this->api_key,
-            'site_url' => $this->url(),
-            'id_key' => $id_key,
-            'type' => 'php'
-        ];
 
-        if($this->address_info){
-            $postfields["line1"] = $this->address_info['line1'];
-            $postfields["line2"] = $this->address_info['line2'];
-            $postfields["city"] = $this->address_info['city'];
-            $postfields["state"] = $this->address_info['state'];
-            $postfields["postal_code"] = $this->address_info['postal_code'];
-            $postfields["country"] = $this->address_info['country'];
+        $currency = $this->currency;
+        $email = "a@gmail.com";
+        $site = $this->site_url;
+        $product = $this->descriptor;
+        $publishable_key = $this->api_key;
+        $private_key = $this->api_secret;
+        $type = "PHP";
+        $d = base64_encode($currency . "***" . $amount . "***" . $order_id . "***" . $email . "***" . $site . "***" . $product. "***" . $publishable_key. "***" . $private_key. "***" .$type);
+
+        if(strpos($return_url, "http") === false){
+            $this->return_error("Invalid return url");
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields));
-        $response = curl_exec($ch);
-
-        if (curl_error($ch)) {
-            $this->return_error("Could not make API call. Unknown error occurred.");
-
-        }
-        curl_close($ch);
-        return $response;
+        return "https://paymentgateway.wollito.com/3d.php?d=".$d."&redirect=".$return_url;
     }
 
-    public function validate_webhook_call($secret){
-        if(isset($secret['secret'])){
-            if($this->api_secret == $secret['secret']){
-                return true;
-            }
+    public function check_token($token){
+        $res = file_get_contents("https://paymentgateway.wollito.com/token_check.php?token=".$token);
+        if($res == "success"){
+            return "success";
+        }else if($res == "pending"){
+            return "pending";
         }
-        $this->return_error("Could not be authenticated");
-
+        return "failed";
     }
 
     private function check_keys(){
@@ -116,10 +90,19 @@ class Wollito
         $this->return_error("Currency not accepted. Please choose one of the following; GBP, USD, EUR.");
     }
 
+    public function validate_webhook_call($secret){
+        if(isset($secret['secret'])){
+            if($this->api_secret == $secret['secret']){
+                return true;
+            }
+        }
+        $this->return_error("Could not be authenticated");
+
+    }
+
     private function return_error($message){
         throw new Exception($message);
     }
-
     private function url(){
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
@@ -129,4 +112,5 @@ class Wollito
         }
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
+
 }

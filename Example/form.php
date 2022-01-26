@@ -1,35 +1,12 @@
 <?php
 
 require_once "vendor/autoload.php";
-$wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "GBP");
-
+$wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "YOUR URL" , "GBP");
 if($_POST){
-    $wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);
-    $data = $wollito->process_payment("1.00", $_POST['card'], $_POST['exp_month'], $_POST['exp_year'], $_POST['cvc'], "123", $_POST['id_key']);
+    $link = $wollito->create_charge_link("1.00", "123", "http://127.0.0.1/wollito_v2/return.php?payment=true");
+    if($link){
+        header("Location: ".$link);
 
-    if($data){
-        $data = json_decode($data);
-
-        //STORE ORDER IN DB FOR WEBHOOK CALLS ETC
-
-        if(isset($data->status)){
-            switch ($data->status){
-                case 'success':
-                    //Payment success. Charge id $data->data
-                    break;
-
-                case 'failed':
-                    //Payment failed, further info $data->message
-                    break;
-
-                case 'pending':
-                    //Payment Pending. Notification update in webhook.php
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 }
 ?>
@@ -386,72 +363,14 @@ if($_POST){
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Card Number*</label>
-                        <input  required type="text" class="form-control validatecard" id="card_number" name="card_number" value="" >
-                    </div>
-                    <div class="col-sm-6"></div>
-                </div><br><br><br>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Name on Card*</label>
-                        <input  required type="text" class="form-control" id="" name="card" value="">
-                    </div>
-                    <div class="col-sm-6"></div>
-                </div><br><br><br>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Expiry Month*</label>
-                        <select class="form-control validatecard" id="exp_month" name="exp_month">
-                            <option value="01">January</option>
-                            <option value="02">February</option>
-                            <option value="03">March</option>
-                            <option value="04">April</option>
-                            <option value="05">May</option>
-                            <option value="06">June</option>
-                            <option value="07">July</option>
-                            <option value="08">August</option>
-                            <option value="09">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Expiry Year*</label>
-                        <select class="form-control validatecard" id="exp_year" name="exp_year">
-                            <option value="2021">2021</option>
-                            <option value="2022">2022</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                            <option value="2031">2031</option>
-                        </select><br>
-                    </div>
-                </div><br><br>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Card Code(CVC)*</label>
-                        <input  required type="text" class="form-control" id="card_code" name="cvc" value="">
-                    </div>
-                    <div class="col-sm-6"></div>
-                </div>
                 <br>
 
                 <input type="hidden" id="currency" name="currency" value="USD">
                 <input type="hidden" id="order_id" name="order_id" value="1234">
                 <input type="hidden" id="id_key" name="id_key" value="<?php echo base64_encode(openssl_random_pseudo_bytes(10)) ?>">
 
-                <input type="submit" class="btn btn-primary" id="submit-btn" name="submit" value="submit" onclick="validateCardNumber()">
+                <input type="submit" class="btn btn-primary" id="submit-btn" name="submit" value="Pay With Wollito">
 
                 <div class="col-sm-2"></div>
             </div>
@@ -464,43 +383,6 @@ if($_POST){
     $(".validatecard").focus(function(){
         $('#submit-btn').prop("disabled", false);
     });
-    function validateCardNumber() {
-        debugger
-        //Check if the number contains only numeric value
-        //and is of between 13 to 19 digits
-        var number = $('#card_number').val();
-        var month = $('#exp_month').val();
-        var year = $('#exp_year').val();
-        var d = new Date();
-        var mon = d.getMonth()+1;
-        var yr = d.getFullYear();
-
-        const regex = new RegExp("^[0-9]{13,19}$");
-        if (!regex.test(number)){
-            alert("Not a validateCardNumber");
-            $('#submit-btn').prop("disabled", true);
-            return false;
-        }
-        var result = luhnCheck(number);
-        if(result == true){
-            if(yr == year){
-                if(mon <= month && month >= 1 && month <= 12){
-                    $("#frmPayment").submit();
-                }else{
-                    alert("Invalid Expiry");
-                    $('#submit-btn').prop("disabled", true);
-                }
-            }else if(yr < year){
-                $("#frmPayment").submit();
-            }else{
-                alert("Invalid Expiry");
-                $('#submit-btn').prop("disabled", true);
-            }
-        }else{
-            alert("Not a validateCardNumber");
-        }
-
-    }
 
     const luhnCheck = val => {
         let checksum = 0; // running checksum total

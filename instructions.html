@@ -42,64 +42,31 @@
 
         <h4>Introduction: </h4>
 
-        <p>To get start you must instantiate the class, you pass the API Key, API Secret & Currency</p>
+        <p>To get start you must instantiate the class, you pass the API Key, API Secret, Description on customers statement, your site url & Currency</p>
         <small>Currency options include; GBP, USD, EUR</small>
 
         <br/>
 
         <code>
-            $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "CURRENCY (GBP)");
+            $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "your SITE URL", "CURRENCY (GBP)");
         </code>
 
         <br/><br/>
 
         <p>Once you have instantiated the class, you can call function using the <code>$wollito</code> variable.</p>
 
-        <h4>Set Address Details</h4>
-        <code>$wollito->set_address_info($_POST['line1'], $_POST['line2'], $_POST['city'], $_POST['state'], $_POST['postal_code'], $_POST['country']);</code>
-
         <h4>Processing Payments:</h4>
         <p>The process payment functions, takes the parameters below and can be called like so: </p>
-        <small>Generate random string as part of the from, so there are no duplicate payments.</small>
+        <small>Always include the payment=true parameter.</small>
 
-        <code> $data = $wollito->process_payment("AMOUNT", "CARD NUMBER", "EXPIRY MONTH", "EXPIRY YEAR", "SECURITY CODE", "ORDER ID", "RANDOM STRING"); </code>
+        <code> $data = $wollito->create_charge_link("AMOUNT", "ORDER ID", "Return URL (yoururl.com/returnpage.php?payment=true"); </code>
 
+        <p>This will create a charge link where you will redirect user to</p>
         <br/><br/>
 
         <h4>Response: </h4>
-        <p>The call will return a JSON object containing the status and date or error message</p>
+        <p>The call will return a url or false value</p>
 
-        <code>
-            <pre style="color: #e83e8c;">
-if($data){
-    $data = json_decode($data);
-
-    //STORE ORDER IN DB FOR WEBHOOK CALLS ETC
-
-    if(isset($data->status)){
-        switch ($data->status){
-            case 'success':
-                //Payment success. Charge id $data->data
-                break;
-
-            case 'failed':
-                //Payment failed, further info $data->message
-                break;
-
-            case 'pending':
-                //Payment Pending. Notification update in webhook.php
-                break;
-
-            default:
-                //Unknown status
-                break;
-        }
-    }
-}
-
-            </pre>
-
-        </code>
 
         <h4>Webhook: </h4>
         <p>Sometimes payments are returned as pending and therefore will need updating via a webhook.</p>
