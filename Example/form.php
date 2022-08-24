@@ -1,7 +1,10 @@
 <?php
 
-require_once "vendor/autoload.php";
-$wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "YOUR URL" , "GBP");
+use Wollito\Wollito\Wollito;
+
+require_once 'vendor/autoload.php';
+
+$wollito = new Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE",  "YOUR URL" , "GBP");
 if($_POST){
     $link = $wollito->create_charge_link("1.00", "123", "http://127.0.0.1/wollito_v2/return.php?payment=true");
     if($link){
