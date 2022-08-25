@@ -12,9 +12,9 @@ class Wollito
     private $url = "https://paymentgateway.wollito.com/";
 
 
-    public function __construct($api_key = "", $api_secret = "", $site_url = "", $currency = "GBP")
+    public function __construct($api_key = "",$site_url = "", $currency = "GBP")
     {
-        $this->set_keys($api_key, $api_secret);
+        $this->set_keys($api_key, $api_key);
         $this->set_currency($currency);
         $this->set_site_url($site_url);
     }
