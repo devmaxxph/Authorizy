@@ -34,7 +34,7 @@
             <pre style="color: #e83e8c;">
     "autoload": {
         "psr-4": {
-            "WollitoPackage\\": "vendor/wollito/wollito"
+            "Wollito\\Wollito\\": "vendor/wollito/wollito"
         }
     }
                 </pre>
@@ -42,13 +42,13 @@
 
         <h4>Introduction: </h4>
 
-        <p>To get start you must instantiate the class, you pass the API Key, API Secret, Description on customers statement, your site url & Currency</p>
+        <p>To get start you must instantiate the class, you pass the API Key, your site url & Currency</p>
         <small>Currency options include; GBP, USD, EUR</small>
 
         <br/>
 
         <code>
-            $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "your SITE URL", "CURRENCY (GBP)");
+            $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE",  "your SITE URL", "CURRENCY (GBP)");
         </code>
 
         <br/><br/>
