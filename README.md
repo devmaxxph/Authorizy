@@ -19,7 +19,7 @@ Ensure your composer.json includes the following;
 ``` {style="color: #e83e8c;"}
     "autoload": {
         "psr-4": {
-            "WollitoPackage\\": "vendor/wollito/wollito"
+            "Wollito\\Wollito\\": "vendor/wollito/wollito"
         }
     }
                 
@@ -32,7 +32,7 @@ Secret & Currency
 
 Currency options include; GBP, USD, EUR \
 
-`             $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "YOUR SECRET KEY HERE", "STATEMENT DESCRIPTOR", "your SITE URL", "CURRENCY (GBP)");         `
+`             $wollito = new \WollitoPackage\Wollito("YOUR KEY HERE", "your SITE URL", "CURRENCY (GBP)");         `
 \
 \
 
