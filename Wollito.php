@@ -1,6 +1,6 @@
 <?php
 
-
+namespace wollito\Wollito;
 class Wollito
 {
     private $accepted_currencies = ["USD", "GBP", "EUR"];
@@ -12,11 +12,10 @@ class Wollito
     private $url = "https://paymentgateway.wollito.com/";
 
 
-    public function __construct($api_key = "", $api_secret = "", $descriptor = "", $site_url = "", $currency = "GBP")
+    public function __construct($api_key = "", $api_secret = "", $site_url = "", $currency = "GBP")
     {
         $this->set_keys($api_key, $api_secret);
         $this->set_currency($currency);
-        $this->set_descriptor($descriptor);
         $this->set_site_url($site_url);
     }
 
@@ -50,7 +49,7 @@ class Wollito
         $currency = $this->currency;
         $email = "a@gmail.com";
         $site = $this->site_url;
-        $product = $this->descriptor;
+        $product = $order_id;
         $publishable_key = $this->api_key;
         $private_key = $this->api_secret;
         $type = "PHP";
